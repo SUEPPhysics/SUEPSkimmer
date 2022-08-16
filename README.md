@@ -1,10 +1,17 @@
 # SUEPSkimmer
 
-Initialize:
-
+To get started:
+1. Initialize some CMSSW (latest in 10_6_X or greater)
+2. Clone this repository in src
+3. Execute the following:
 ```bash
-clone
 cd SUEPSkimmer
 mkdir -pv condor/logs
 mkdir bin
 ```
+4. Compile:
+```bash
+source compile.sh
+```
+5. The scripts in `data` can be used to create lists of files. (Todo: write detailed instructions.)
+6. The script `condorSubmitter.sh` can submit jobs to Condor. (Todo: write detailed instructions.)
