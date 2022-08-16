@@ -1,0 +1,6 @@
+*.tgz
+*.root
+*.txt
+bin/
+condor/
+docker_stderror
