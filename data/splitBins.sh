@@ -1,6 +1,7 @@
 #!/bin/sh
 
 inputFile=$1
+dataset=$2
 
 ptbins=(
   15to30 
@@ -20,7 +21,16 @@ ptbins=(
   3200toInf
 )
 
+if [ ! -d "filesPerBin" ]
+then
+  mkdir filesPerBin
+fi
+
 for pt in ${ptbins[@]}
 do
-  grep ${pt} ${inputFile} > filesPerBin/files_${pt}.txt
+  if [ -f "filesPerBin/${dataset}_${pt}.txt" ]
+  then
+    rm filesPerBin/${dataset}_${pt}.txt
+  fi
+  grep ${pt} ${inputFile} > filesPerBin/${dataset}_${pt}.txt
 done

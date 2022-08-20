@@ -6,18 +6,22 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 
 ### Input section
 cmssw=$1
-output=$2
-input=$3
+dataset=$2
+number=$3
+
+input=data/filesSplit/${dataset}_${number}.txt
+output=${dataset}_${number}.root
 
 tar -xf ${cmssw}.tgz
 rm ${cmssw}.tgz
 export SCRAM_ARCH=slc7_amd64_gcc820
-cd ${cmssw}/src/
+cd ${cmssw}/src
 eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
+cd SUEPSkimmer
 source compile.sh
 ./bin/skimmer ${output} $(cat $input)
 
-xrdcp -f ${output} root://cmseos.fnal.gov//store/user/lpcsuep/QCD_skimmed/${output}
+xrdcp -f ${output} root://cmseos.fnal.gov//store/user/lpcsuep/QCD_skimmed/${dataset}/${output}
 
 ### remove the output file if you don't want it automatically transferred when the job ends
 rm ${ouput}

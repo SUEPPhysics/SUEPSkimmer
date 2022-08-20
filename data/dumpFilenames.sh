@@ -1,16 +1,15 @@
 #!/bin/sh
 
-inputFile=$1
-allFiles=allFIles
+inputFile=${1}
+allFiles=allFIles_${inputFile:0:-4}.txt
 
-if [ -f "${allFiles}.txt" ]
+if [ -f "${allFiles}" ]
 then
-  rm "${allFiles}.txt"
+  rm ${allFiles}
 fi
 
 while read p
 do
-  xrdfs root://xrootd.cmsaf.mit.edu/ ls $p | grep ".root" >> "${allFiles}.txt"
-done<${inputFile}
-
+  xrdfs root://xrootd.cmsaf.mit.edu/ ls $p | grep ".root" >> ${allFiles}
+done < ${inputFile}
 
