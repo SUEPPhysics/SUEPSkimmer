@@ -1,15 +1,20 @@
 #!/bin/sh
 
-inputFile=$1
-use_xrootd=true
+# Usage: ./countFilesMIT.sh datasets.txt xrootd
+
+inputFile=$1 # datasets.txt
+engine=$2 # xrootd or gfal
 
 while read p
 do
   echo -n "${p:28:-11}: "
-  if [ $use_xrootd ] ; then
+  if [ "$engine" = xrootd ] ; then
     xrdfs root://xrootd.cmsaf.mit.edu/ ls $p | grep ".root" | wc -l
+  elif [ "$engine" = gfal ] ; then
+    gfal-ls gsiftp://se01.cmsaf.mit.edu:2811//cms/$p | grep ".root" | wc -l
   else
-    gfal-ls gsiftp://se01.cmsaf.mit.edu:2811//cms/${p} | grep ".root" | wc -l
+    echo "Unknown engine: $engine"
+    break
   fi
 done < ${inputFile}
 
