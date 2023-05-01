@@ -19,6 +19,8 @@ cd ${cmssw}/src
 eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
 cd SUEPSkimmer
 source compile.sh
+
+# TODO: first copy the input file to the worker, then run
 ./bin/skimmer ${output} $(cat $input)
 
 xrdcp -f ${output} root://cmseos.fnal.gov//store/user/lpcsuep/QCD_skimmed/${dataset}/${output}
