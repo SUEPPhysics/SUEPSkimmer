@@ -17,5 +17,3 @@ do
     break
   fi
 done < ${inputFile}
-
-
