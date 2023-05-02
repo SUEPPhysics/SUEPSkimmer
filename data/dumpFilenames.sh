@@ -5,15 +5,15 @@
 inputFile=$1
 engine=$2
 
-out_dir="filenames"
+output_dir="filenames"
 
-if [ -f "${out_dir}" ]
+if [ -f "${output_dir}" ]
 then
-  rm ${out_dir}
+  rm ${output_dir}
 fi
 
 while read p; do
-  file_out="${p:28}.txt"
+  output_file="${output_dir}/${p:28}.txt"
   if [ "$engine" = xrootd ] ; then
     files=( $({ xrdfs root://xrootd.cmsaf.mit.edu/ ls $p | grep ".root"; } 2> /dev/null) )
     while [ $PIPESTATUS -ne 0 ]; do
@@ -30,6 +30,8 @@ while read p; do
     echo "Unknown engine: $engine"
     break
   fi
-  echo ${files[@]} > ${file_out}
+  for element in "${files[@]}"; do
+    echo "${element}" >> ${output_file}
+  done
 done < ${inputFile}
 
