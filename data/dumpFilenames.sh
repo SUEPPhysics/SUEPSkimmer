@@ -10,8 +10,8 @@ output_dir="filenames"
 if [ -f "${output_dir}" ]
 then
   rm ${output_dir}
-  mkdir ${output_dir}
 fi
+mkdir ${output_dir}
 
 while read p; do
   output_file="${output_dir}/${p:28}.txt"
