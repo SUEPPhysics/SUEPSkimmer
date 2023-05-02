@@ -4,10 +4,11 @@ echo "Running on: `uname -a`" #Condor job is running on this node
 echo "System software: `cat /etc/redhat-release`" #Operating System on that node
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-### Input section
+# Input section
 cmssw=$1
 dataset=$2
 number=$3
+$protocol=$4
 
 input=data/filesSplit/${dataset}_${number}.txt
 output=${dataset}_${number}.root
@@ -20,12 +21,26 @@ eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
 cd SUEPSkimmer
 source compile.sh
 
-# TODO: first copy the input file to the worker, then run
-./bin/skimmer ${output} $(cat $input)
+# Get input files
+if [ "$protocol" = xrootd ] ; then
+    until xrdcp root://xrootd.cmsaf.mit.edu//store/user/paus/nanosu/A01/${input} ${input}; do
+        sleep 1
+    done
+elif [ "$protocol" = gfal ] ; then
+    until gfal-cp gsiftp://se01.cmsaf.mit.edu:2811//cms//store/user/paus/nanosu/A01/${input} ${input}; do
+        sleep 1
+    done
+else
+    echo "Unknown engine: $protocol"
+    exit 1
+fi
 
-xrdcp -f ${output} root://cmseos.fnal.gov//store/user/lpcsuep/QCD_skimmed/${dataset}/${output}
+./bin/skimmer ${output} $input
 
-### remove the output file if you don't want it automatically transferred when the job ends
-rm ${ouput}
+until xrdcp -f ${output} root://cmseos.fnal.gov//store/user/lpcsuep/SUEPNano_skimmed/${dataset}/${output}; do
+    sleep 1
+done
+
+rm ${ouput} ${input}
 cd ${_CONDOR_SCRATCH_DIR}
 rm -rf ${cmssw}

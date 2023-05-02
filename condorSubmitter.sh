@@ -1,31 +1,20 @@
 #!/usr/bin/sh
+
 source ${PWD}/prepareCondor.sh
 
-dataset=$1
+datasets=$1
+protocol=$2
+prepare_only=$3
 
-ptbins=(
-  15to30 
-  30to50 
-  50to80 
-  80to120 
-  120to170 
-  170to300 
-  300to470 
-  470to600 
-  600to800 
-  800to1000 
-  1000to1400 
-  1400to1800
-  1800to2400
-  2400to3200
-  3200toInf
-)
+if [ -f "condor" ] ; then
+  rm -rf condor
+fi
+mkdir condor
 
-for pt in ${ptbins[@]}
-do
-  nJobs=$(ls data/filesSplit/ | grep "${dataset}" | grep "${pt}" | wc -l)
-  namestring=${dataset}_${pt}
-  argument=${CMSSW_VERSION}\ ${namestring}\ \$\(Process\)
+while read p; do
+  nfiles=$(wc -l data/filenames/${p}.txt)
+  namestring=${p:28:-4}
+  argument="${CMSSW_VERSION} ${namestring} \$(Process)"
 
   # Write jdl file
   echo "universe = vanilla" >> condor/${namestring}.jdl
@@ -38,8 +27,10 @@ do
   echo "Error = condor/logs/skimmer_${namestring}_\$(Cluster)_\$(Process).stderr" >> condor/${namestring}.jdl
   echo "Log = condor/logs/skimmer_${namestring}_\$(Cluster)_\$(Process).log" >> condor/${namestring}.jdl
   echo "x509userproxy = \$ENV(X509_USER_PROXY)" >> condor/${namestring}.jdl
-  echo "Queue ${nJobs}" >> condor/${namestring}.jdl
+  echo "Queue ${nfiles}" >> condor/${namestring}.jdl
 
   # Submit job
-  condor_submit condor/${namestring}.jdl
+  if [ "$prepare_only" = 0 ] ; then
+    condor_submit condor/${namestring}.jdl
+  fi
 done
