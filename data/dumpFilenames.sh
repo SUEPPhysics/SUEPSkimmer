@@ -10,6 +10,7 @@ output_dir="filenames"
 if [ -f "${output_dir}" ]
 then
   rm ${output_dir}
+  mkdir ${output_dir}
 fi
 
 while read p; do
