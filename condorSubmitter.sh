@@ -8,7 +8,7 @@ datasets=$1
 protocol=$2
 prepare_only=$3
 
-if [ -f "condor" ] ; then
+if [ -d "condor" ] ; then
   rm -rf condor
 fi
 mkdir condor
