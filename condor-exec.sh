@@ -26,7 +26,7 @@ if [ "${protocol}" = xrootd ] ; then
         sleep 1
     done
 elif [ "${protocol}" = gfal ] ; then
-    until gfal-cp gsiftp://se01.cmsaf.mit.edu:2811//cms/${input_path} ${input_file}; do
+    until gfal-copy gsiftp://se01.cmsaf.mit.edu:2811//cms/${input_path} ${input_file}; do
         sleep 1
     done
 else
