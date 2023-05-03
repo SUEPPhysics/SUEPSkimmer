@@ -11,11 +11,11 @@ prepare_only=$3
 if [ -d "condor" ] ; then
   rm -rf condor
 fi
-mkdir condor
+mkdir -pv condor/logs
 
 while read p; do
-  nfiles=$(wc -l data/filenames/${p}.txt)
-  dataset=${p:28:-4}
+  dataset=${p:28}
+  nfiles=$(wc -l < "data/filenames/${dataset}.txt")
   argument="${CMSSW_VERSION} ${dataset} \$(Process) ${protocol}"
 
   # Write jdl file
