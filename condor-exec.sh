@@ -34,10 +34,11 @@ else
     exit 1
 fi
 
-./bin/skimmer output.root ${input_file}
+output_file="output_${dataset:0:10}_${number}.root"
+./bin/skimmer ${output_file} ${input_file}
 
 output_path="/store/user/lpcsuep/SUEPNano_skimmed/${dataset}/${input_file}"
-until xrdcp -f output.root root://cmseos.fnal.gov/${output_path}; do
+until xrdcp -f ${output_file} root://cmseos.fnal.gov/${output_path}; do
     sleep 1
 done
 
