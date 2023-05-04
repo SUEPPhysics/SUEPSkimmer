@@ -19,14 +19,14 @@ cd SUEPSkimmer
 source compile.sh
 
 # Get input files
-input_file=$(sed "${number}q;d" data/filenames/${dataset}.txt)
+input_file=$(sed "$((number + 1))q;d" data/filenames/${dataset}.txt)
 input_path="/store/user/paus/nanosu/A02/${dataset}/${input_file}"
 if [ "${protocol}" = xrootd ] ; then
-    until xrdcp root://xrootd.cmsaf.mit.edu/${input_path} ${input_file}; do
+    until xrdcp root://xrootd.cmsaf.mit.edu/${input_path} .; do
         sleep 1
     done
 elif [ "${protocol}" = gfal ] ; then
-    until gfal-copy gsiftp://se01.cmsaf.mit.edu:2811//cms/${input_path} ${input_file}; do
+    until gfal-copy gsiftp://se01.cmsaf.mit.edu:2811//cms/${input_path} .; do
         sleep 1
     done
 else
