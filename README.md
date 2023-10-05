@@ -1,25 +1,32 @@
 # SUEPSkimmer
 
+## Getting started
+
+Will skim SUEPNano files produced by kraken at the MIT cluster. The default HLT path for skimming is `HLT_TripleMu_5_3_3*`.
+
 To get started:
 
-1. Initialize some CMSSW (latest in `10_6_X` or greater)
+1. Initialize some CMSSW _(Note: `13_0_4` worked great for me)_
 2. Clone this repository in src
 3. Execute the following:
 
 ```bash
 cd SUEPSkimmer
-mkdir -pv condor/logs
-mkdir bin
+./compile.sh
 ```
 
-4. Compile:
+4. The scripts in `data` can be used to create lists of files. See README.md in `data` for more information.
+5. The script `condorSubmitter.sh` can submit jobs to Condor. To just prepare but not submit:
 
-```bash
-source compile.sh
-```
+   ```bash
+   ./condorSubmitter.sh -d data/datasets.dat -p gfal
+   ```
 
-5. The scripts in `data` can be used to create lists of files.
-6. The script `condorSubmitter.sh` can submit jobs to Condor.
+   To prepare and submit:
+
+   ```bash
+   ./condorSubmitter.sh -d data/datasets.dat -p gfal -s
+   ```
 
 ## Preparing the files for skimming
 
@@ -36,7 +43,7 @@ source compile.sh
 
 ```bash
 cd data
-source dumpFilenames.sh datasets.dat gfal
+./dumpFilenames.sh -d datasets.dat -p gfal
 ```
 
 3. The output is in files named `data/filenames/<dataset name>.txt`. One file per dataset will be produced. All available input files will be listed in the file.
@@ -46,5 +53,5 @@ source dumpFilenames.sh datasets.dat gfal
 1. The script `condorSubmitter.sh` can be used to submit jobs to Condor. The script takes three arguments: the file that lists the datasets, the transfer protocol to be used (gfal or xrootd), and a boolean that will only prepare but not submit if true. For example:
 
 ```bash
-source condorSubmitter.sh data/datasets.dat gfal false
+./condorSubmitter.sh -d data/datasets.dat -p gfal -s
 ```

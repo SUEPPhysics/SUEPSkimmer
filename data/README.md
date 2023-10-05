@@ -5,10 +5,16 @@ Place dataset names in a file `datasets.dat`, one per line.
 Then, run
 
 ```bash
-source dumpFilenames.sh datasets.dat gfal
+./dumpFilenames.sh -d datasets.dat -p gfal
 ```
 
 where `gfal` is the protocol to use (`gfal` or `xrootd`).
+
+If you want to check how many files exist per dataset, run
+
+```bash
+./countFiles.sh -d datasets.dat -p gfal
+```
 
 _OLD INSTRUCTIONS_
 Available datasets for the moment:

@@ -9,6 +9,7 @@ cmssw=$1
 dataset=$2
 number=$3
 protocol=$4
+suffix=$5
 
 tar -xf ${cmssw}.tgz
 rm ${cmssw}.tgz
@@ -19,7 +20,7 @@ cd SUEPSkimmer
 source compile.sh
 
 # Get input files
-input_file=$(sed "$((number + 1))q;d" data/filenames/${dataset}.txt)
+input_file=$(sed "$((number + 1))q;d" data/filenames${suffix}/${dataset}.txt)
 input_path="/store/user/paus/nanosu/A02/${dataset}/${input_file}"
 if [ "${protocol}" = xrootd ] ; then
     until xrdcp root://xrootd.cmsaf.mit.edu/${input_path} .; do
@@ -42,6 +43,6 @@ until xrdcp -f ${output_file} root://cmseos.fnal.gov/${output_path}; do
     sleep 1
 done
 
-rm output.root ${input_file}
+rm ${output_file} ${input_file}
 cd ${_CONDOR_SCRATCH_DIR}
 rm -rf ${cmssw}
