@@ -1,23 +1,23 @@
 # Data
 
-Available datasets for the moment:
-- `QCD_2016_apv`
-- `QCD_2016`
-- `QCD_2017`
-- `QCD_2018`
+**NEW INSTRUCTIONS**
+Place dataset names in a file `datasets.dat`, one per line.
+Then, run
 
-First, get the files:
 ```bash
-source dumpFilenames.sh QCD_2018.dat
+./dumpFilenames.sh -d datasets.dat -p gfal
 ```
 
-Then, split the bins:
+where `gfal` is the protocol to use (`gfal` or `xrootd`).
+
+If you want to check how many files exist per dataset, run
+
 ```bash
-source splitBins.sh allFIles_QCD_2018.txt QCD_2018
+./countFilesAtMIT.sh -d datasets.dat -p gfal
 ```
-and split files for jobs:
+
+If you are not submitting for the first time and you want to create a diff between the processed and unprocessed files, run
+
 ```bash
-source splitFiles.sh QCD_2018 10
+./diff -d datasets.dat -p gfal
 ```
-where `10` is the maximum number of files processed per job (use any number you want).
- 
