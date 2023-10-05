@@ -12,6 +12,7 @@ To get started:
 
 ```bash
 cd SUEPSkimmer
+chmod +x compile.sh
 ./compile.sh
 ```
 

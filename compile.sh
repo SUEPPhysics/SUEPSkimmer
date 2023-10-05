@@ -9,7 +9,8 @@ if [ ! -d "bin" ]; then
 fi
 
 # Change the permissions of the scripts
-chmod +x compile.sh condorSubmitter.sh data/dumpFilenames.sh
+chmod +x condorSubmitter.sh 
+chmod +x data/dumpFilenames.sh data/diff.sh data/countFilesAtMIT.sh
 
 # Compile the C++ code
 g++ Skimmer/src/skimRuns.cpp -o bin/skimRuns -march=native -O2 $(root-config --cflags --libs)

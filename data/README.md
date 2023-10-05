@@ -13,7 +13,13 @@ where `gfal` is the protocol to use (`gfal` or `xrootd`).
 If you want to check how many files exist per dataset, run
 
 ```bash
-./countFiles.sh -d datasets.dat -p gfal
+./countFilesAtMIT.sh -d datasets.dat -p gfal
+```
+
+If you are not submitting for the first time and you want to create a diff between the processed and unprocessed files, run
+
+```bash
+./diff -d datasets.dat -p gfal
 ```
 
 _OLD INSTRUCTIONS_

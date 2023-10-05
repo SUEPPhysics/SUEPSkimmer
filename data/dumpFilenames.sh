@@ -1,22 +1,23 @@
 #!/bin/sh
 
-# Usage: ./dumpFilenames.sh -d data/datasets.dat -p [protocol]
+# Usage: ./dumpFilenames.sh -d data/datasets.dat -o [output_dir] -p [protocol]
 # -d: path to the file containing the list of datasets (default: data/datasets.dat)
+# -o: path to the output directory (default: filenames)
 # -p: protocol to be used (xrootd or gfal) (default: gfal)
 
 # Default values
 datasets="datasets.dat"
+output_dir="filenames"
 protocol="gfal"
 
-while getopts 'd:p:' option; do
+while getopts 'd:o:p:' option; do
   case "${option}" in
     d) datasets="${OPTARG}" ;;
+    o) output_dir="${OPTARG}" ;;
     p) protocol="${OPTARG}" ;;
     *) echo "Unexpected option ${option}" ;;
   esac
 done
-
-output_dir="filenames"
 
 if [ -f "${output_dir}" ]
 then
