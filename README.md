@@ -51,8 +51,24 @@ cd data
 
 ## Submitting jobs to Condor
 
-1. The script `condorSubmitter.sh` can be used to submit jobs to Condor. The script takes three arguments: the file that lists the datasets, the transfer protocol to be used (gfal or xrootd), and a boolean that will only prepare but not submit if true. For example:
+The script `condorSubmitter.sh` can be used to submit jobs to Condor. The script takes three arguments: the file that lists the datasets, the transfer protocol to be used (gfal or xrootd), and a boolean that will only prepare but not submit if true. For example:
 
 ```bash
 ./condorSubmitter.sh -d data/datasets.dat -p gfal -s
+```
+
+## Resubmitting missing/new files
+
+When new files appear or some files are missing, the script `data/diff.sh` can run a `diff` between the files in the MIT cluster and the output files in the LPC EOS. The resulting diff output can be used to resubmit jobs for the missing/new files. The script takes the same arguments as `data/dumpFilenames.sh`:
+
+```bash
+./diff.sh -d datasets.dat -p gfal
+```
+
+# Merging the output
+
+The merging will fuse the files into 1GB blocks (or smaller if total size is less than 1GB). The script `merger.sh` will merge the files in the `output` directory. The user should use the wrapper script `runMerger.sh` to run the merger. The script takes two arguments: the file that lists the datasets and the input path in the LPC EOS. For example:
+
+```bash
+./runMerger.sh -d data/datasets.dat -i /store/user/lpcsuep
 ```
