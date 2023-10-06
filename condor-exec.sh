@@ -9,10 +9,13 @@ cmssw=$1
 dataset=$2
 number=$3
 protocol=$4
-suffix=$5
+input_dir=$5
 
-tar -xf ${cmssw}.tgz
-rm ${cmssw}.tgz
+# Move to a tmp dir to avoid conflicts
+tmp_dir=$(mktemp -d -p .)
+cd ${tmp_dir}
+tar -xf ../${cmssw}.tgz
+rm ../${cmssw}.tgz
 export SCRAM_ARCH=slc7_amd64_gcc820
 cd ${cmssw}/src
 eval $(scramv1 runtime -sh) # cmsenv is an alias not on the workers
@@ -20,7 +23,7 @@ cd SUEPSkimmer
 source compile.sh
 
 # Get input files
-input_file=$(sed "$((number + 1))q;d" data/filenames${suffix}/${dataset}.txt)
+input_file=$(sed "$((number + 1))q;d" ${input_dir}/${dataset}.txt)
 input_path="/store/user/paus/nanosu/A02/${dataset}/${input_file}"
 if [ "${protocol}" = xrootd ] ; then
     until xrdcp root://xrootd.cmsaf.mit.edu/${input_path} .; do
@@ -35,7 +38,8 @@ else
     exit 1
 fi
 
-output_file="output_${dataset:0:10}_${number}.root"
+dataset_primary=$(echo "$dataset" | awk -F'+' '{print $1}')
+output_file="output_${dataset_primary}_${number}.root"
 ./bin/skimmer ${output_file} ${input_file}
 
 output_path="/store/user/lpcsuep/SUEPNano_skimmed/${dataset}/${input_file}"
@@ -45,4 +49,4 @@ done
 
 rm ${output_file} ${input_file}
 cd ${_CONDOR_SCRATCH_DIR}
-rm -rf ${cmssw}
+rm -rf ${tmp_dir}

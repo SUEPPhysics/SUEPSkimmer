@@ -18,7 +18,8 @@ while getopts 'd:i:' option; do
 done
 
 
-for d in ${datasets[@]}; do
-  source merger.sh -i "$input_path/SUEPNano_skimmed/$d" -o "$input_path/SUEPNano_skimmed_merged/$d"
-done
+while read d; do
+  dataset=$(echo "$d" | awk -F'/' '{print $NF}')
+  ./merger.sh -i "$input_path/SUEPNano_skimmed/$dataset" -o "$input_path/SUEPNano_skimmed_merged/$dataset"
+done < "$datasets"
 

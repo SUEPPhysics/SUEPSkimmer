@@ -27,7 +27,8 @@ mkdir ${output_dir}
 
 # Attempt to fetch the filenames. Might need to retry many times...
 while read p; do
-  output_file="${output_dir}/${p:28}.txt"
+  dataset=$(echo "$p" | awk -F'/' '{print $NF}')
+  output_file="${output_dir}/${dataset}.txt"
   if [ "$protocol" = xrootd ] ; then
     files=( $( { xrdfs root://xrootd.cmsaf.mit.edu/ ls $p | grep ".root"; } 2> /dev/null ) )
     while [ $PIPESTATUS -ne 0 ]; do

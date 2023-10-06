@@ -15,7 +15,8 @@ while getopts d:p: option; do
 done
 
 while read p; do
-  echo -n "${p:28:-11}: "
+  dataset=$(echo "$p" | awk -F'/' '{print $NF}')
+  echo -n "${dataset}: "
   if [ "$protocol" = xrootd ] ; then
     files=( $( { xrdfs root://xrootd.cmsaf.mit.edu/ ls $p | grep ".root"; } 2> /dev/null ) )
     while [ $PIPESTATUS -ne 0 ]; do

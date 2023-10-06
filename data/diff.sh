@@ -56,7 +56,7 @@ while read p; do
 
     echo "Diff file created: ${dataset}.txt"
     #cat diff_${dataset}.txt
-done
+done < $datasets
 
 # Clean up
 rm src_files.txt dest_files.txt src_files_sorted.txt dest_files_sorted.txt
