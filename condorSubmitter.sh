@@ -1,7 +1,8 @@
 #!/usr/bin/sh
 
-# Usage: ./condorSubmitter.sh -d data/datasets.dat -p [protocol] -s
+# Usage: ./condorSubmitter.sh -d data/datasets.dat -i [input_dir] -p [protocol] -s
 # -d: path to the file containing the list of datasets (default: data/datasets.dat)
+# -i: path to the input directory (default: data/filenames)
 # -p: protocol to be used (xrootd or gfal) (default: gfal)
 # -s: submit the jobs (will just prepare the jdl files if not specified)
 
@@ -10,19 +11,19 @@ source ${PWD}/prepareCondor.sh
 
 # Default values
 datasets="data/datasets.dat"
+input_dir="data/filenames"
 protocol="gfal"
 sumbit=0
 
-while getopts 'd:p:s' option; do
+while getopts 'd:i:p:s' option; do
   case "${option}" in
     d) datasets="${OPTARG}" ;;
+    i) input_dir="${OPTARG}" ;;
     p) protocol="${OPTARG}" ;;
     s) sumbit=1 ;;
     *) echo "Unexpected option ${option}" ;;
   esac
 done
-
-suffix=${datasets:13:-4}
 
 if [ -d "condor" ] ; then
   rm -rf condor
@@ -30,12 +31,12 @@ fi
 mkdir -pv condor/logs
 
 while read p; do
-  dataset=${p:28}
-  if [[ ! -s "data/filenames${suffix}/${dataset}.txt" ]]; then
+  dataset=$(echo "$p" | awk -F'/' '{print $NF}')
+  if [[ ! -s "${input_dir}/${dataset}.txt" ]]; then
     continue
   fi
-  nfiles=$(wc -l < "data/filenames${suffix}/${dataset}.txt")
-  argument="${CMSSW_VERSION} ${dataset} \$(Process) ${protocol} ${suffix}"
+  nfiles=$(wc -l < "${input_dir}/${dataset}.txt")
+  argument="${CMSSW_VERSION} ${dataset} \$(Process) ${protocol} ${input_dir}"
 
   # Write jdl file
   echo "universe = vanilla" >> condor/${dataset}.jdl
