@@ -6,8 +6,15 @@
 
 int main(int argc, char **argv)
 {
-    TBranch *branch;
-    Bool_t TriggerPass = 0;
+    // Define variables for the trigger paths
+    TBranch *branch1;
+    TBranch *branch2;
+    TBranch *branch3;
+    Bool_t TriggerPass1 = 0;
+    Bool_t TriggerPass2 = 0;
+    Bool_t TriggerPass3 = 0;
+
+    // THe input TTrees
     TChain *old_tree_Evts = new TChain("Events");
     TChain *old_tree_Lumi = new TChain("LuminosityBlocks");
     TChain *old_tree_Runs = new TChain("Runs");
@@ -30,7 +37,10 @@ int main(int argc, char **argv)
     old_tree_Meta->GetEntry(0);
     old_tree_Para->GetEntry(0);
 
-    old_tree_Evts->SetBranchAddress("HLT_TripleMu_5_3_3_Mass3p8_DZ", &TriggerPass, &branch);
+    // Setting branch addresses for trigger paths
+    old_tree_Evts->SetBranchAddress("HLT_TripleMu_5_3_3", &TriggerPass1, &branch1);
+    old_tree_Evts->SetBranchAddress("HLT_TripleMu_5_3_3_Mass3p8to60_DZ", &TriggerPass2, &branch2);
+    old_tree_Evts->SetBranchAddress("HLT_TripleMu_5_3_3_Mass3p8_DZ", &TriggerPass3, &branch3);
 
     // Creating a new file to contain the selected events
     TFile *output_file = TFile::Open(argv[1], "RECREATE");
@@ -59,8 +69,13 @@ int main(int argc, char **argv)
             std::cout << "Processing: " << event << "th entry"
                       << "\n"
                       << std::flush;
+            // Check if the content of trigger variables
+            std::cout << "TriggerPass1: " << TriggerPass1 
+                      << ", TriggerPass2: " << TriggerPass2 
+                      << ", TriggerPass3: " << TriggerPass3
+                      <<  "\n" << std::flush;
         }
-        if (TriggerPass)
+        if (TriggerPass1 || TriggerPass2 || TriggerPass3)
         {
             new_tree_Evts->Fill();
         }
