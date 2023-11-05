@@ -30,7 +30,7 @@ if [ "${protocol}" = xrootd ] ; then
         sleep 1
     done
 elif [ "${protocol}" = gfal ] ; then
-    until gfal-copy gsiftp://se01.cmsaf.mit.edu:2811//cms/${input_path} .; do
+    until env -i X509_USER_PROXY=${X509_USER_PROXY} gfal-copy gsiftp://se01.cmsaf.mit.edu:2811//cms/${input_path} .; do
         sleep 1
     done
 else
